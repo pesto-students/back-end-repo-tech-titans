@@ -10,6 +10,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!!");
 });
 
+app.get("/:id", (req, res) => {
+  res.send("Hello ID!!");
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
