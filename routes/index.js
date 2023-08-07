@@ -9,4 +9,8 @@ router.get("/:id", (req, res) => {
   res.send("Hello ID!!");
 });
 
+router.get("/dev", (req, res) => {
+  res.send("Hello from DEV!!");
+});
+
 module.exports = router;
