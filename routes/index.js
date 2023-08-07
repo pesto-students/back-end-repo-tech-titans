@@ -5,12 +5,12 @@ router.get("/", (req, res) => {
   res.send("Hello World!!");
 });
 
-router.get("/:id", (req, res) => {
-  res.send("Hello ID!!");
-});
-
 router.get("/dev", (req, res) => {
   res.send("Hello from DEV!!");
+});
+
+router.get("/:id", (req, res) => {
+  res.send("Hello ID!!");
 });
 
 module.exports = router;
