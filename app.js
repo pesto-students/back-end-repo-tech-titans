@@ -1,13 +1,10 @@
-const index = require("./routes/index.js");
 const express = require("express");
 const app = express();
+app.use(express.json());
 
-app.use("/", index);
+//Routes
+const item = require("./routes/itemsRoute");
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
-});
+app.use("/api/v1", item);
 
 module.exports = app;
