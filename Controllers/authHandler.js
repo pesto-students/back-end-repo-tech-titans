@@ -30,7 +30,25 @@ async function signupHandler(req, res) {
     res.status(500).json({ message: "Error occurred", error: error.message });
   }
 }
-function loginHandler(req, res) {}
+async function loginHandler(req, res) {
+  const { email, password } = req.body;
+
+  //check if user exist or not
+  let isAvailable = await Customer.findOne({
+    where: { email: email },
+  });
+  if (!isAvailable) {
+    return res.status(400).send({ message: "User not registered" });
+  }
+
+  //check password
+
+  let passwordMatch = bcrypt.compareSync(password, isAvailable.password);
+  if (!passwordMatch) {
+    return res.status(400).send({ message: "Incorrect password" });
+  }
+  return res.status(200).send({ message: "User logged in successfully" });
+}
 function resetPasswordHandler(req, res) {}
 
 module.exports = { signupHandler, loginHandler, resetPasswordHandler };
