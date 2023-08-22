@@ -1,16 +1,7 @@
 const express = require("express");
-const router = express.Router();
+const route = express.Router();
+const authRoute = require("./auth");
 
-router.get("/", (req, res) => {
-  res.send("Hello World!!");
-});
+route.use("/auth", authRoute);
 
-router.get("/dev", (req, res) => {
-  res.send("Hello from DEV!!");
-});
-
-router.get("/:id", (req, res) => {
-  res.send("Hello ID!!");
-});
-
-module.exports = router;
+module.exports = route;
