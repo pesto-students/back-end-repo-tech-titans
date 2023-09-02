@@ -37,4 +37,8 @@ let passwordSchema = Joi.object({
     .required(),
   confirmNewPassoword: Joi.ref("new_password"),
 });
-module.exports = { signupSchema, loginSchema, passwordSchema };
+
+let mobileSchema = Joi.object({
+  mobile: Joi.number().integer().min(10).max(10).required(),
+});
+module.exports = { signupSchema, loginSchema, passwordSchema, mobileSchema };
