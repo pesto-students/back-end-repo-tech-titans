@@ -9,7 +9,7 @@ let signupSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
 
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
 
   // repeat_password: Joi.ref('password'),
 
@@ -25,4 +25,16 @@ let signupSchema = Joi.object({
   //     .min(1900)
   //     .max(2013),
 });
-module.exports = { signupSchema };
+
+let loginSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
+});
+let passwordSchema = Joi.object({
+  new_password: Joi.string()
+    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+    .required(),
+  confirmNewPassoword: Joi.ref("new_password"),
+});
+module.exports = { signupSchema, loginSchema, passwordSchema };
