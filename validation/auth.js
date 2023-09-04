@@ -30,6 +30,13 @@ let loginSchema = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+});
+
+let emailSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
 });
 let passwordSchema = Joi.object({
   new_password: Joi.string()
@@ -39,6 +46,12 @@ let passwordSchema = Joi.object({
 });
 
 let mobileSchema = Joi.object({
-  mobile: Joi.number().integer().min(10).max(10).required(),
+  mobile: Joi.number().integer().required(),
 });
-module.exports = { signupSchema, loginSchema, passwordSchema, mobileSchema };
+module.exports = {
+  signupSchema,
+  loginSchema,
+  emailSchema,
+  passwordSchema,
+  mobileSchema,
+};

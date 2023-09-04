@@ -5,6 +5,7 @@ const Session = require("../models/Session");
 const {
   signupSchema,
   loginSchema,
+  emailSchema,
   passwordSchema,
 } = require("../validation/auth");
 
@@ -85,6 +86,9 @@ async function loginHandler(req, res) {
     var token = jwt.sign({ isAvailable }, jwtSecret, {
       expiresIn: 60 * 60 * 60,
     }); //token expiration time set as  1 hour
+    console.log("Token generated", token);
+    res.cookie("nToken", token, { maxAge: 900000, httpOnly: true });
+
     await Session.create({
       userId: isAvailable.customerId,
       jwt: token,
@@ -97,9 +101,15 @@ async function loginHandler(req, res) {
     return res.send({ message: err.message });
   }
 }
+
+function logoutHandler(req, res) {
+  res.clearCookie("nToken");
+  return res.send({ message: "cookie deleted. Session logged out." });
+  // return res.redirect("http://localhost:5000/api/v1/auth/login");
+}
 async function resetPasswordHandler(req, res) {
   try {
-    await loginSchema.validateAsync(req.body);
+    await emailSchema.validateAsync(req.body);
     const { email } = req.body;
     const isUser = await Customer.findOne({ where: { email: email } });
     if (!isUser) {
@@ -110,13 +120,11 @@ async function resetPasswordHandler(req, res) {
     let resetToken = jwt.sign({ email }, jwtSecret, { expiresIn: 120 }); //2 minutes
     // const link=`http://localhost:${process.env.PORT}/reset-password/${email}/${resetToken}`;  //to be removed after creating process.env.PORT and using the same
     const link = `http://localhost:5000/api/v1/auth/createpassword/${resetToken}`;
-    return res
-      .status(200)
-      .send({
-        message:
-          "Token generated. Valid for 2 minutes. Please reset password within 2 mintes",
-        URL: link,
-      });
+    return res.status(200).send({
+      message:
+        "Token generated. Valid for 2 minutes. Please reset password within 2 mintes",
+      URL: link,
+    });
   } catch (err) {
     return res.send({ message: err.message });
   }
@@ -170,6 +178,7 @@ async function createPasswordHandler(req, res) {
 module.exports = {
   signupHandler,
   loginHandler,
+  logoutHandler,
   resetPasswordHandler,
   createPasswordHandler,
 };

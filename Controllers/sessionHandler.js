@@ -7,8 +7,9 @@ const { mobileSchema } = require("../validation/auth");
 //update mobile handler
 async function updateMobileHandler(req, res) {
   try {
-    await mobileSchema.validateAsync(req.body.mobile);
+    console.log("BODY is", req.body);
     let { mobile, userData } = req.body;
+    await mobileSchema.validateAsync({ mobile });
 
     console.log("MOBILE is", mobile);
     console.log("customer id is", userData.customerId);
@@ -20,6 +21,7 @@ async function updateMobileHandler(req, res) {
       message: "Mobile number updated successfully",
     });
   } catch (err) {
+    console.log(err);
     return res.send({
       message: "Mobile number does not have 10 digits",
       error: err.message,
