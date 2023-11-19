@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateMobileHandler } = require("../Controllers/sessionHandler");
+const { updateMobileHandler } = require("../controllers/sessionHandler");
 
 const route = express.Router();
 
