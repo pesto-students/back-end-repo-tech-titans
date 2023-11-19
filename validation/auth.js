@@ -15,10 +15,10 @@ let signupSchema = Joi.object({
 
   mobile: Joi.number().integer().required(),
 
-  address: Joi.string().alphanum().min(10).max(100).required(),
+  address: Joi.string().min(10).max(100).required(),
   city: Joi.string().min(3).max(40).required(),
   state: Joi.string().min(2).max(40).required(),
-  pincode: Joi.number().integer().min(8).max(8).required(),
+  pincode: Joi.number().integer().required(),
 
   // birth_year: Joi.number()
   //     .integer()
