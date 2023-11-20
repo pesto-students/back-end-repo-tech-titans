@@ -9,7 +9,8 @@ const Customer = require("./models/customer.js");
 const Order = require("./models/orderModel.js");
 const OrderItem = require("./models/orderModel.js");
 const OrderAddress = require("./models/orderAddressModel.js");
-const ProductDescription = require("./models/productModel.js");
+const Category = require("./models/categoryModel.js");
+const Product = require("./models/productModel.js");
 const Session = require("./models/Session.js");
 
 (async () => {

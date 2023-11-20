@@ -1,15 +1,11 @@
 const Sequelize = require("sequelize");
 const sequelizeDb = require("../database");
 
-const ProductDescription = sequelizeDb.define("productDescription", {
+const Product = sequelizeDb.define("products", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-  },
-  productID: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
   },
   name: {
     type: Sequelize.STRING,
@@ -23,17 +19,25 @@ const ProductDescription = sequelizeDb.define("productDescription", {
     type: Sequelize.DECIMAL(10),
     allowNull: false,
   },
-  imageURL: {
+  cloudinary_slug: {
     type: Sequelize.STRING,
+    allowNull: true,
+  },
+  category_id: {
+    type: Sequelize.INTEGER,
     allowNull: false,
   },
   stock: {
     type: Sequelize.INTEGER,
-    defaultValue: 1,
+    defaultValue: 100,
     validate: {
       length: [1, 4],
     },
   },
 });
 
-module.exports = ProductDescription;
+Product.associate = (models) => {
+  Product.belongsTo(models.Category, { foreignKey: "category_id" });
+};
+
+module.exports = Product;
