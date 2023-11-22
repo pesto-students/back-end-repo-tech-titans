@@ -31,7 +31,8 @@ const Product = sequelizeDb.define("products", {
     type: Sequelize.INTEGER,
     defaultValue: 100,
     validate: {
-      length: [1, 4],
+      min: 100,
+      max: 1000,
     },
   },
 });

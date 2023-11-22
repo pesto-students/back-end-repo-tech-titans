@@ -1,17 +1,12 @@
-const app = require("./app.js");
-
-// const dotenv = require("dotenv");
-// dotenv.config({ path: "config/config.env" });
 require("dotenv").config();
-
+const app = require("./app.js");
 const sequelizeDb = require("./database.js");
-const Customer = require("./models/customer.js");
-const Order = require("./models/orderModel.js");
-const OrderItem = require("./models/orderModel.js");
-const OrderAddress = require("./models/orderAddressModel.js");
-const Category = require("./models/categoryModel.js");
-const Product = require("./models/productModel.js");
-const Session = require("./models/Session.js");
+
+// const Customer = require("./models/customer.js");
+// const Order = require("./models/orderModel.js");
+// const OrderItem = require("./models/orderModel.js");
+// const OrderAddress = require("./models/orderAddressModel.js");
+// const Session = require("./models/Session.js");
 
 (async () => {
   await sequelizeDb.sync();

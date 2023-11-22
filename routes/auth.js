@@ -5,7 +5,7 @@ const {
   logoutHandler,
   resetPasswordHandler,
   createPasswordHandler,
-} = require("../Controllers/authHandler");
+} = require("../controllers/authHandler");
 const route = express.Router();
 
 route.post("/signup", signupHandler);

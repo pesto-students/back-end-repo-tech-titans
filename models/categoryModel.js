@@ -14,10 +14,6 @@ const Category = sequelizeDb.define("categories", {
   parent_id: {
     type: Sequelize.INTEGER,
     allowNull: true,
-    references: {
-      model: "Category",
-      key: "id",
-    },
   },
 });
 

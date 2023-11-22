@@ -1,5 +1,7 @@
-var jwt = require("jsonwebtoken");
-const jwtSecret = "ghdsjvbiuy43870yoh22#$hoihnAkpvbjhTN)3&_N";
+require("dotenv").config();
+
+const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWT_TOKEN;
 
 //check login
 function checkLogin(req, res, next) {
