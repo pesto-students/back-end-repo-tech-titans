@@ -7,7 +7,7 @@ const Category = require("../models/categoryModel");
 const createCategory = async (req, res) => {
   try {
     const category = await Category.create(req.body);
-    res.json({
+    res.status(201).json({
       status: 201,
       success: true,
       data: category,
@@ -15,7 +15,7 @@ const createCategory = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",
@@ -29,8 +29,10 @@ const createCategory = async (req, res) => {
  */
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.findAll();
-    res.json({
+    const categories = await Category.findAll({
+      attributes: ["id", "name"],
+    });
+    res.status(200).json({
       status: 200,
       success: true,
       data: categories,
@@ -38,7 +40,7 @@ const getAllCategories = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",

@@ -1,4 +1,6 @@
 const Product = require("../models/productModel");
+const { buildWhereClause } = require("../utils/queryBuilder");
+const { literal, Op } = require("sequelize");
 
 /**
  * Controller for creating a product in the database
@@ -7,7 +9,7 @@ const Product = require("../models/productModel");
 const createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
-    res.json({
+    res.status(201).json({
       status: 201,
       success: true,
       data: product,
@@ -15,7 +17,7 @@ const createProduct = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",
@@ -29,15 +31,39 @@ const createProduct = async (req, res) => {
  */
 const getAllProducts = async (req, res) => {
   try {
-    const pageNumber = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 30;
+    const {
+      availability,
+      category,
+      priceRangeMin: minPrice,
+      priceRangeMax: maxPrice,
+      pageNumber = 1,
+      pageSize = 15,
+    } = req.query;
+
+    const whereClause = buildWhereClause(
+      availability,
+      category,
+      minPrice,
+      maxPrice
+    );
 
     const { count, rows: products } = await Product.findAndCountAll({
-      offset: (pageNumber - 1) * pageSize,
+      attributes: [
+        "id",
+        "name",
+        "description",
+        "price",
+        "cloudinary_slug",
+        "category_id",
+        [literal("stock > 0"), "in_stock"], // Computed column based on quantity
+      ],
+      where: whereClause,
+      // order:
       limit: pageSize,
+      offset: (pageNumber - 1) * pageSize,
     });
 
-    res.json({
+    res.status(200).json({
       status: 200,
       success: true,
       data: products,
@@ -50,7 +76,7 @@ const getAllProducts = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",
@@ -66,7 +92,7 @@ const getProductsByCategory = async (req, res) => {
   try {
     const categoryId = parseInt(req.params.categoryId);
     const pageNumber = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 5;
+    const pageSize = parseInt(req.query.pageSize) || 15;
 
     const { count, rows: products } = await Product.findAndCountAll({
       offset: (pageNumber - 1) * pageSize,
@@ -76,7 +102,7 @@ const getProductsByCategory = async (req, res) => {
       },
     });
 
-    res.json({
+    res.status(200).json({
       status: 200,
       success: true,
       data: products,
@@ -89,7 +115,7 @@ const getProductsByCategory = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",
@@ -109,14 +135,14 @@ const getProductById = async (req, res) => {
 
     // Check for if product was not found
     if (!product) {
-      return res.json({
+      return res.status(404).json({
         status: 404,
         success: false,
         error: "Product not found",
       });
     }
 
-    res.json({
+    res.status(200).json({
       status: 200,
       success: true,
       data: product,
@@ -124,7 +150,7 @@ const getProductById = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",
@@ -145,7 +171,7 @@ const updateProductById = async (req, res) => {
 
     // Check if product exists
     if (!product) {
-      return res.json({
+      return res.status(404).json({
         status: 404,
         success: false,
         error: "Product not found",
@@ -155,7 +181,7 @@ const updateProductById = async (req, res) => {
     // Update product details
     await product.update(productPayload);
 
-    res.json({
+    res.status(200).json({
       status: 200,
       success: true,
       data: product,
@@ -163,7 +189,7 @@ const updateProductById = async (req, res) => {
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",
@@ -182,7 +208,7 @@ const deleteProductById = async (req, res) => {
 
     // Check if product exists
     if (!product) {
-      return res.json({
+      return res.status(404).json({
         status: 404,
         success: false,
         error: "Product not found",
@@ -192,14 +218,14 @@ const deleteProductById = async (req, res) => {
     // Delete product
     await product.destroy();
 
-    res.json({
+    res.status(200).json({
       status: 200,
       success: true,
     });
   } catch (error) {
     // Add logging here
     console.error(error);
-    res.json({
+    res.status(500).json({
       status: 500,
       sucess: false,
       error: "Internal Server Error",

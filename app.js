@@ -1,11 +1,14 @@
 const express = require("express");
-const routes = require("./routes");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const routes = require("./routes");
 
 const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use(cors());
 
 // Middleware for parsing JSON data
 app.use(express.json());
