@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 
-const buildWhereClause = (availability, category, minPrice, maxPrice) => {
+const generateWhereClause = (availability, category, minPrice, maxPrice) => {
   const whereClause = {};
 
   // Including availability clause
@@ -38,4 +38,14 @@ const buildWhereClause = (availability, category, minPrice, maxPrice) => {
   return whereClause;
 };
 
-module.exports = { buildWhereClause };
+const generateOrderByClause = (sortBy) => {
+  let orderByClause = [];
+  if (sortBy) {
+    let [fieldName, order] = sortBy.split("_");
+    orderByClause = [fieldName, order.toUpperCase()];
+  }
+
+  return orderByClause;
+};
+
+module.exports = { generateWhereClause, generateOrderByClause };

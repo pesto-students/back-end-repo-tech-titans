@@ -1,5 +1,8 @@
 const Product = require("../models/productModel");
-const { buildWhereClause } = require("../utils/queryBuilder");
+const {
+  generateWhereClause,
+  generateOrderByClause,
+} = require("../utils/queryBuilder");
 const { literal, Op } = require("sequelize");
 
 /**
@@ -34,18 +37,21 @@ const getAllProducts = async (req, res) => {
     const {
       availability,
       category,
+      sortBy,
       priceRangeMin: minPrice,
       priceRangeMax: maxPrice,
       pageNumber = 1,
       pageSize = 15,
     } = req.query;
 
-    const whereClause = buildWhereClause(
+    const whereClause = generateWhereClause(
       availability,
       category,
       minPrice,
       maxPrice
     );
+
+    const orderByClause = generateOrderByClause(sortBy);
 
     const { count, rows: products } = await Product.findAndCountAll({
       attributes: [
@@ -58,7 +64,7 @@ const getAllProducts = async (req, res) => {
         [literal("stock > 0"), "in_stock"], // Computed column based on quantity
       ],
       where: whereClause,
-      // order:
+      ...(orderByClause.length && { order: [orderByClause] }),
       limit: pageSize,
       offset: (pageNumber - 1) * pageSize,
     });
